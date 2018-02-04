@@ -125,6 +125,21 @@ function [pks idx varargout] = findpeaks (data, varargin)
   ## Note that in Octave 4.0, inputParser is classdef and Octave behaves
   ## weird for it. which ("inputParser") will return empty (thinks its a
   ## builtin function).
+
+  if isscalar(varargin{1})
+    ## findpeaks(data, Fs)
+    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#bufhyo1-2
+    ## TODO: This only calculates Fs and remainder of varargins
+    ##       This does not implement the exact behavior
+    Fs = varargin{1};
+    varargin = varargin(2:end);
+  elseif isvector(varargin{1}) && numel(varargin{1}) == numel(data)
+    ## findpeaks(data, x)
+    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#bufhyo1-1
+    x = varargin{1};
+    varargin = varargin(2:end);
+  endif
+
   if (exist ("inputParser") == 2
       && isempty (strfind (which ("inputParser"),
                            ["@inputParser" filesep "inputParser.m"])))
@@ -290,6 +305,10 @@ function [pks idx varargout] = findpeaks (data, varargin)
     pks = data(idx);
   endif
 
+  if exist("x")
+    idx = x(idx);
+  endif
+
   if (transpose)
     pks = pks.';
     idx = idx.';
@@ -358,4 +377,3 @@ endfunction
 ## Failing test because we are not Matlab compatible
 %!xtest assert (findpeaks ([34 134 353 64 134 14 56 67 234 143 64 575 8657]),
 %!              [353 134 234])
-
