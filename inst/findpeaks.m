@@ -194,7 +194,7 @@ function [pks idx varargout] = findpeaks (data, varargin)
   if (dSided)
     [data, __data__] = deal (__data__, data);
   elseif (min (data) < 0)
-    error ("findpeaks:InvalidArgument",
+    warning ("findpeaks:InvalidArgument",
            'Data contains negative values. You may want to "DoubleSided" option');
   endif
 
