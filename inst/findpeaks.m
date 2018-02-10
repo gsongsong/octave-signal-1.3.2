@@ -149,11 +149,17 @@ function [pks idx varargout] = findpeaks (data, varargin)
     parser.addParamValue ("MinPeakHeight", 2*std (__data__),posscal);
     parser.addParamValue ("MinPeakDistance", 4, posscal);
     parser.addParamValue ("MinPeakWidth", 2, posscal);
+    ## findpeaks(_, _, 'SortStr', 'none'|'ascend'|'descent')
+    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#input_argument_namevalue_d119e18411
+    parser.addParamValue ("SortStr", "none");
     parser.addSwitch ("DoubleSided");
     parser.parse (varargin{:});
     minH      = parser.Results.MinPeakHeight;
     minD      = parser.Results.MinPeakDistance;
     minW      = parser.Results.MinPeakWidth;
+    ## findpeaks(_, _, 'SortStr', 'none'|'ascend'|'descent')
+    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#expand_panel_heading_input_argument_namevalue_d119e18411
+    sortStr = parser.Results.SortStr;
     dSided    = parser.Results.DoubleSided;
   else
     ## either old @inputParser or no inputParser at all...
@@ -202,8 +208,17 @@ function [pks idx varargout] = findpeaks (data, varargin)
   idx = idx(tf);
 
   ## sort according to magnitude
-  [~, tmp] = sort (data(idx), "descend");
-  idx_s = idx(tmp);
+  ## findpeaks(_, _, 'SortStr', 'none'|'ascend'|'descent')
+  ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#expand_panel_heading_input_argument_namevalue_d119e18411
+  if strcmp(sortStr, "descend")
+    [~, tmp] = sort (data(idx), "descend");
+    idx_s = idx(tmp);
+  elseif strcmp(sortStr, "ascend")
+    [~, tmp] = sort (data(idx), "ascend");
+    idx_s = idx(tmp);
+  else
+    idx_s = idx;
+  endif
 
   ## Treat peaks separated less than minD as one
   D = abs (bsxfun (@minus, idx_s, idx_s'));
