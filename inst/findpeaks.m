@@ -196,6 +196,8 @@ function [pks idx varargout] = findpeaks (data, varargin)
   elseif (min (data) < 0)
     warning ("findpeaks:InvalidArgument",
            'Data contains negative values. You may want to "DoubleSided" option');
+    __data__ = data;
+    data = __data__ - min(data);
   endif
 
   ## Rough estimates of first and second derivative
@@ -320,11 +322,11 @@ function [pks idx varargout] = findpeaks (data, varargin)
   endif
 
 
-  if (dSided)
+  #if (dSided)
+  #  pks = __data__(idx);
+  #else
     pks = __data__(idx);
-  else
-    pks = data(idx);
-  endif
+  #endif
 
   if exist("x")
     idx = x(idx);
