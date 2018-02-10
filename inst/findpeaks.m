@@ -152,6 +152,10 @@ function [pks idx varargout] = findpeaks (data, varargin)
     ## findpeaks(_, _, 'SortStr', 'none'|'ascend'|'descent')
     ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#input_argument_namevalue_d119e18411
     parser.addParamValue ("SortStr", "none");
+    ## findpekas(_, _, 'NPeaks', npeaks)
+    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#input_argument_namevalue_d119e18373
+    ## TODO: This is a dummy and does not work
+    parser.addParamValue("NPeaks", 0, posscal);
     parser.addSwitch ("DoubleSided");
     parser.parse (varargin{:});
     minH      = parser.Results.MinPeakHeight;
