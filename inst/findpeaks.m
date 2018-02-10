@@ -126,18 +126,20 @@ function [pks idx varargout] = findpeaks (data, varargin)
   ## weird for it. which ("inputParser") will return empty (thinks its a
   ## builtin function).
 
-  if isscalar(varargin{1})
-    ## findpeaks(data, Fs)
-    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#bufhyo1-2
-    ## TODO: This only calculates Fs and remainder of varargins
-    ##       This does not implement the exact behavior
-    Fs = varargin{1};
-    varargin = varargin(2:end);
-  elseif isvector(varargin{1}) && numel(varargin{1}) == numel(data)
-    ## findpeaks(data, x)
-    ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#bufhyo1-1
-    x = varargin{1};
-    varargin = varargin(2:end);
+  if numel(varargin) > 0
+    if isscalar(varargin{1})
+      ## findpeaks(data, Fs)
+      ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#bufhyo1-2
+      ## TODO: This only calculates Fs and remainder of varargins
+      ##       This does not implement the exact behavior
+      Fs = varargin{1};
+      varargin = varargin(2:end);
+    elseif isvector(varargin{1}) && numel(varargin{1}) == numel(data)
+      ## findpeaks(data, x)
+      ## https://kr.mathworks.com/help/signal/ref/findpeaks.html#bufhyo1-1
+      x = varargin{1};
+      varargin = varargin(2:end);
+    endif
   endif
 
   if (exist ("inputParser") == 2
